@@ -1,0 +1,420 @@
+{% comment %}theme-check-disable UndefinedObject{% endcomment %}
+{{ 'section-footer.css' | asset_url | stylesheet_tag }}
+{{ 'component-newsletter.css' | asset_url | stylesheet_tag }}
+{{ 'component-list-menu.css' | asset_url | stylesheet_tag }}
+{{ 'component-list-payment.css' | asset_url | stylesheet_tag }}
+{{ 'component-list-social.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .footer {
+    margin-top: {{ section.settings.margin_top | times: 0.75 | round: 0 }}
+    px;
+  }
+
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}
+    px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}
+    px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .footer {
+      margin-top: {{ section.settings.margin_top }}
+      px;
+    }
+
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}
+      px;
+      padding-bottom: {{ section.settings.padding_bottom }}
+      px;
+    }
+  }
+{%- endstyle -%}
+
+<footer>
+  <div
+    class="footer page-width">
+    <div
+      class="content">
+      <strong>Contatos</strong>
+      <p>Rua Afonso Pena, 1234</p>
+
+      <p>
+        Segunda à Sexta. Das 08:00 às 18:00 Sabádo Das 08:00 às 12:00
+      </p>
+    </div>
+    <div
+      class="content">
+      <strong>Institucional</strong>
+
+      <ul>
+        {% for linklist in linklists %}
+          {% if linklist.handle == 'footer' %}
+            {% for link in linklist.links %}
+              <li>
+                <a
+                  href="{{ link.url }}">
+                  <span>
+                    {{ link.title }}
+                  </span>
+                </a>
+              </li>
+            {% endfor %}
+          {% endif %}
+        {% endfor %}
+      </ul>
+    </div>
+    <div
+      class="content">
+      <strong>
+        Suporte
+      </strong>
+      <ul>
+        {% for linklist in linklists %}
+          {% if linklist.handle == 'suporte' %}
+            {% for link in linklist.links %}
+              <li>
+                <a
+                  href="{{ link.url }}">
+                  <span>
+                    {{ link.title }}
+                  </span>
+                </a>
+              </li>
+            {% endfor %}
+          {% endif %}
+        {% endfor %}
+      </ul>
+    </div>
+    <div
+      class="content">
+      <strong>Redes sociais</strong>
+      {%- render 'social-icons', class: 'footer__list-social' -%}
+    </div>
+
+    <div
+      class="content">
+      <strong>Newsletter</strong>
+
+      {%- if section.settings.newsletter_enable -%}
+        <div
+          class="footer-block__newsletter">
+          {%- form 'customer', id: 'ContactFooter', class: 'footer__newsletter newsletter-form' -%}
+            <input
+              type="hidden"
+              name="contact[tags]"
+              value="newsletter">
+            <div
+              class="newsletter-form__field-wrapper">
+              <div
+                class="field"
+                style="display: flex; flex-direction: column; justify-content: center;">
+                <input
+                  id="NewsletterForm--{{ section.id }}"
+                  type="email"
+                  name="contact[email]"
+                  class="field__input"
+                  value="{{ form.email }}"
+                  aria-required="true"
+                  autocorrect="off"
+                  autocapitalize="off"
+                  autocomplete="email"
+                  {% if form.errors %}
+                  autofocus
+                  aria-invalid="true"
+                  aria-describedby="ContactFooter-error"
+                  {% elsif form.posted_successfully? %}
+                  aria-describedby="ContactFooter-success"
+                  {% endif %}
+                  placeholder="{{ 'newsletter.label' | t }}"
+                  required>
+                <label
+                  class="field__label"
+                  for="NewsletterForm--{{ section.id }}">
+                  {{ 'newsletter.label' | t }}
+                </label>
+                <button
+                  type="submit"
+                  class="sh-secondary"
+                  name="commit"
+                  id="Subscribe"
+                  aria-label="{{ 'newsletter.button_label' | t }}">
+                  Continuar
+                  <span
+                    style="margin-left: auto;">{% render 'icon-arrow' %}</span>
+                </button>
+              </div>
+              {%- if form.errors -%}
+                <small
+                  class="newsletter-form__message form__message"
+                  id="ContactFooter-error">
+                  {%- render 'icon-error' -%}
+                  {{- form.errors.translated_fields.email | capitalize }}
+                  {{ form.errors.messages.email -}}
+                </small>
+              {%- endif -%}
+            </div>
+            {%- if form.posted_successfully? -%}
+              <h3
+                class="newsletter-form__message newsletter-form__message--success form__message"
+                id="ContactFooter-success"
+                tabindex="-1"
+                autofocus>
+                {% render 'icon-success' -%}
+                {{- 'newsletter.success' | t }}
+              </h3>
+            {%- endif -%}
+          {%- endform -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</footer>
+
+<div
+  class="line-end">
+  <div
+    class="page-width section-end">
+    <div
+      class="content">
+      <p>Pague com
+      </p>
+      <img
+        src="https://cdn.shopify.com/s/files/1/0790/0902/2231/files/cards_430x.png?v=1689526254"
+        loading="lazy"
+        style="margin-left: 10px"
+        alt="">
+    </div>
+
+    <div
+      class="content">
+      <img
+        src="https://cdn.shopify.com/s/files/1/0790/0902/2231/files/logo-footer_430x.png?v=1689526383"
+        loading="lazy"
+        alt="">
+    </div>
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "t:sections.footer.name",
+    "blocks": [
+      {
+        "type": "@app"
+      },
+      {
+        "type": "link_list",
+        "name": "t:sections.footer.blocks.link_list.name",
+        "settings": [
+          {
+            "type": "inline_richtext",
+            "id": "heading",
+            "default": "Quick links",
+            "label": "t:sections.footer.blocks.link_list.settings.heading.label"
+          }, {
+            "type": "link_list",
+            "id": "menu",
+            "default": "footer",
+            "label": "t:sections.footer.blocks.link_list.settings.menu.label",
+            "info": "t:sections.footer.blocks.link_list.settings.menu.info"
+          }
+        ]
+      },
+      {
+        "type": "brand_information",
+        "name": "t:sections.footer.blocks.brand_information.name",
+        "settings": [
+          {
+            "type": "paragraph",
+            "content": "t:sections.footer.blocks.brand_information.settings.paragraph.content"
+          }, {
+            "type": "header",
+            "content": "t:sections.footer.blocks.brand_information.settings.header__1.content"
+          }, {
+            "type": "checkbox",
+            "id": "show_social",
+            "default": true,
+            "label": "t:sections.footer.blocks.brand_information.settings.show_social.label",
+            "info": "t:sections.footer.blocks.brand_information.settings.show_social.info"
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "name": "t:sections.footer.blocks.text.name",
+        "settings": [
+          {
+            "type": "inline_richtext",
+            "id": "heading",
+            "default": "Heading",
+            "label": "t:sections.footer.blocks.text.settings.heading.label"
+          }, {
+            "type": "richtext",
+            "id": "subtext",
+            "default": "<p>Share contact information, store details, and brand content with your customers.</p>",
+            "label": "t:sections.footer.blocks.text.settings.subtext.label"
+          }
+        ]
+      }, {
+        "type": "image",
+        "name": "Image",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+          }, {
+            "type": "range",
+            "id": "image_width",
+            "min": 50,
+            "max": 550,
+            "step": 5,
+            "unit": "px",
+            "label": "Image width",
+            "default": 100
+          }, {
+            "type": "select",
+            "id": "alignment",
+            "label": "Image alignment on large screen",
+            "options": [
+              {
+                "value": "",
+                "label": "Left"
+              }, {
+                "value": "center",
+                "label": "Center"
+              }, {
+                "value": "right",
+                "label": "Right"
+              }
+            ],
+            "default": "center"
+          }
+        ]
+      }
+    ],
+    "settings": [
+      {
+        "type": "color_scheme",
+        "id": "color_scheme",
+        "label": "t:sections.all.colors.label",
+        "default": "background-1"
+      },
+      {
+        "type": "header",
+        "content": "t:sections.footer.settings.header__1.content",
+        "info": "t:sections.footer.settings.header__1.info"
+      },
+      {
+        "type": "checkbox",
+        "id": "newsletter_enable",
+        "default": true,
+        "label": "t:sections.footer.settings.newsletter_enable.label"
+      },
+      {
+        "type": "inline_richtext",
+        "id": "newsletter_heading",
+        "default": "&nbsp;",
+        "label": "t:sections.footer.settings.newsletter_heading.label"
+      }, {
+        "type": "header",
+        "content": "t:sections.footer.settings.header__9.content",
+        "info": "t:sections.footer.settings.header__9.info"
+      }, {
+        "type": "checkbox",
+        "id": "enable_follow_on_shop",
+        "default": true,
+        "label": "t:sections.footer.settings.enable_follow_on_shop.label"
+      }, {
+        "type": "header",
+        "content": "t:sections.footer.settings.header__2.content",
+        "info": "t:sections.footer.settings.header__2.info"
+      }, {
+        "type": "checkbox",
+        "id": "show_social",
+        "default": true,
+        "label": "t:sections.footer.settings.show_social.label"
+      }, {
+        "type": "header",
+        "content": "t:sections.footer.settings.header__3.content",
+        "info": "t:sections.footer.settings.header__4.info"
+      }, {
+        "type": "checkbox",
+        "id": "enable_country_selector",
+        "default": true,
+        "label": "t:sections.footer.settings.enable_country_selector.label"
+      }, {
+        "type": "header",
+        "content": "t:sections.footer.settings.header__5.content",
+        "info": "t:sections.footer.settings.header__6.info"
+      }, {
+        "type": "checkbox",
+        "id": "enable_language_selector",
+        "default": true,
+        "label": "t:sections.footer.settings.enable_language_selector.label"
+      }, {
+        "type": "header",
+        "content": "t:sections.footer.settings.header__7.content"
+      }, {
+        "type": "checkbox",
+        "id": "payment_enable",
+        "default": true,
+        "label": "t:sections.footer.settings.payment_enable.label"
+      }, {
+        "type": "header",
+        "content": "t:sections.footer.settings.header__8.content",
+        "info": "t:sections.footer.settings.header__8.info"
+      }, {
+        "type": "checkbox",
+        "id": "show_policy",
+        "default": false,
+        "label": "t:sections.footer.settings.show_policy.label"
+      }, {
+        "type": "header",
+        "content": "t:sections.all.spacing"
+      }, {
+        "type": "range",
+        "id": "margin_top",
+        "min": 0,
+        "max": 100,
+        "step": 4,
+        "unit": "px",
+        "label": "t:sections.footer.settings.margin_top.label",
+        "default": 0
+      }, {
+        "type": "header",
+        "content": "t:sections.all.padding.section_padding_heading"
+      }, {
+        "type": "range",
+        "id": "padding_top",
+        "min": 0,
+        "max": 100,
+        "step": 4,
+        "unit": "px",
+        "label": "t:sections.all.padding.padding_top",
+        "default": 36
+      }, {
+        "type": "range",
+        "id": "padding_bottom",
+        "min": 0,
+        "max": 100,
+        "step": 4,
+        "unit": "px",
+        "label": "t:sections.all.padding.padding_bottom",
+        "default": 36
+      }
+    ],
+    "default": {
+      "blocks": [
+        {
+          "type": "link_list"
+        }, {
+          "type": "text"
+        }
+      ]
+    }
+  }
+{% endschema %}

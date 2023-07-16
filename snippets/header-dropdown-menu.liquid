@@ -1,0 +1,39 @@
+{% comment %}
+Renders a standard dropdown style menu for the header.
+
+Usage:
+{% render 'header-dropdown-menu' %}
+{% endcomment %}
+<nav class="header__inline-menu sh-nav-menu">
+  <ul class="list-menu list-menu--inline" role="list">
+
+    {% for linklist in linklists %}
+      {% if linklist.handle == 'main-menu' %}
+        {% for link in linklist.links %}
+          <li>
+            <a href="{{ link.url }}" class="header__menu-item list-menu__item link link--text focus-inset">
+              <span class="header__active-menu-item">
+                {{ link.title }}
+              </span>
+            </a>
+          </li>
+        {% endfor %}
+      {% endif %}
+    {% endfor %}
+
+    <li>
+      <a class="header__menu-item list-menu__item link link--text focus-inset">
+        <span class="header__active-menu-item" style="display: flex; align-items: center;">
+          <img
+            src="https://cdn.shopify.com/s/files/1/0790/0902/2231/files/ico-wpp_430x.png?v=1689462287"
+            alt="WhatsApp"
+            width="15"
+            height="15"
+            style="margin-right: 5px"
+            loading="lazy">
+          Whatsapp
+        </span>
+      </a>
+    </li>
+  </ul>
+</nav>
